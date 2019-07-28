@@ -1,11 +1,14 @@
 import React from 'react';
 import './App.css';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import SearchIcon from '@material-ui/icons/Search';
-import LinearProgress from '@material-ui/core/LinearProgress';
+// import LinearProgress from '@material-ui/core/LinearProgress';
 import moment from 'moment';
 import { Bar } from 'react-chartjs-2';
+import { Input } from 'antd';
+import { Spin } from 'antd';
+import { Alert } from 'antd';
+const { Search } = Input;
+
+
 
 class App extends React.Component {
 
@@ -13,7 +16,6 @@ class App extends React.Component {
     weather: null,
     loading: false,
     text: '',
-    error: null
   }
 
   getWeather = async (e) => {
@@ -62,48 +64,26 @@ class App extends React.Component {
     return (
       <div className="App">
         <form className="App-header" onSubmit={this.getWeather}>
-          <TextField value={text}
-            autoFocus
-            variant="outlined"
-            label="Search for weather"
+          <Search
+            value={text}
+            placeholder="Search here"
+            enterButton="Search"
+            size="large"
             onChange={e => this.setState({ text: e.target.value })}
-            style={{ width: '100%', marginLeft: 8 }}
           />
-          <Button variant="contained"
-            color="primary"
-            disabled={loading || !text}
-            type="submit"
-            style={{ width: 150, margin: '0 10px', height: 75 }}>
-            <SearchIcon style={{ marginRight: 8 }} />
-            Search
-          </Button>
         </form>
-        {loading && <LinearProgress />}
+        {loading && <Spin size='large' />}
         <main>
           {data && <Bar
             data={data}
             width={100}
             height={50}
-          //options={{ maintainAspectRatio: true }}
           />}
-          {error & <div>
-            {error}
-          </div>}
+          {error && <Alert message={error} type="error" showIcon />}
         </main>
       </div>
     );
   }
 }
-
-// the weather component is very simple
-// it just returns a <div> with an <img> inside it
-// the "src" of the <img> is the URL that is given to us by the giphy API
-// function weather(props) {
-//   const { weather } = props
-//   const url = weather.images.fixed_height.url
-//   return (<div className="weather-wrap" onClick={() => window.open(url, '_blank')}>
-//     <img height="200" alt="weather" src={url} />
-//   </div>)
-// }
 
 export default App;
